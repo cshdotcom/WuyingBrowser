@@ -17,7 +17,7 @@ import com.wuying.browser.R
 import com.wuying.browser.data.PreferenceManager
 import com.wuying.browser.receiver.KeepAliveReceiver
 import com.wuying.browser.ui.BrowserActivity
-import com.wuying.browser.ui.FloatingLauncherActivity
+import com.wuying.browser.ui.FloatingBrowserActivity
 import com.wuying.browser.util.WuyingLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -189,7 +189,8 @@ class CoreService : Service() {
      *
      * - ongoing=true 随前台服务驻留通知栏，系统不会回收（驻留）
      * - 渠道/标题/文案/图标均为「系统更新」风格（伪装）
-     * - 点击 -> FloatingLauncherActivity -> 拉起悬浮窗版浏览器（点击行为）
+     * - 点击 -> 直接拉起 FloatingBrowserActivity（悬浮窗浏览器面板）
+     *   v1.3.0 起不再经过跳板 Activity / Service 中转，点击即出悬浮面板
      *
      * 不再额外发第二条伪装通知：两条样式几乎一样的通知会让用户点错
      * （旧版就是因此点到了打开主界面的那条）。
@@ -197,7 +198,7 @@ class CoreService : Service() {
     private fun startForegroundCompat() {
         val pi = PendingIntent.getActivity(
             this, 0x10,
-            Intent(this, FloatingLauncherActivity::class.java)
+            Intent(this, FloatingBrowserActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

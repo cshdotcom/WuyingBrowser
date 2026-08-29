@@ -26,6 +26,25 @@
         <item name="android:activityCloseExitAnimation">@anim/fade_out</item>
     </style>
 
+    <!--
+      悬浮窗浏览器面板主题（FloatingBrowserActivity 专用，v1.3.0）
+      必须是 Theme.Wuying（AppCompat/Material3 系）的后代：
+      AppCompatActivity 运行时强制校验主题，用系统 Theme.Translucent 会直接崩溃。
+      全屏透明 + 无遮罩 + 系统栏透明 + 无进出动画 -> 悬浮面板瞬时出现/消失，
+      视觉与 overlay 悬浮窗一致。
+    -->
+    <style name="Theme.Wuying.Floating" parent="Theme.Wuying">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
     <!-- 按钮样式 -->
     <style name="WuyingButton" parent="Widget.Material3.Button.TextButton">
         <item name="android:textColor">@color/text_primary</item>

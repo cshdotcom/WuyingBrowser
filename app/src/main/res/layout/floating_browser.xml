@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 悬浮窗浏览器面板：根视图为 FloatingRootView（拦截返回键），圆角深色面板 -->
-<com.wuying.browser.service.FloatingRootView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- 悬浮窗浏览器面板：根视图为 FloatingRootView（拦截返回键），圆角深色面板。
+     由 FloatingBrowserActivity（全屏透明 Activity）承载，v1.3.0 起 -->
+<com.wuying.browser.ui.FloatingRootView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_floating_panel">
@@ -143,7 +144,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 网页内容区：FloatingBrowserService 会把 WebView 动态加进来 -->
+        <!-- 网页内容区：FloatingBrowserActivity 会把 WebView 动态加进来 -->
         <LinearLayout
             android:id="@+id/floating_web_container"
             android:layout_width="match_parent"
@@ -152,4 +153,4 @@
             android:orientation="vertical"
             android:padding="3dp" />
     </LinearLayout>
-</com.wuying.browser.service.FloatingRootView>
+</com.wuying.browser.ui.FloatingRootView>

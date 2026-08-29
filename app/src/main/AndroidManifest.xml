@@ -137,15 +137,26 @@
             android:parentActivityName=".ui.BrowserActivity"
             android:theme="@style/Theme.Wuying" />
 
-        <!-- ============= 通知点击跳板：拉起悬浮窗浏览器（无 UI 透明页） ============= -->
+        <!-- ============= 悬浮窗浏览器面板（全屏透明 Activity） ============= -->
+        <!--
+          v1.3.0 架构：面板直接由透明 Activity 承载（标准应用窗口，
+          输入法交互与主浏览器一致，根治 overlay 窗口唤不起键盘的 ROM 限制）。
+          通知/悬浮球点击直达本页，无 Service 中转，任何 ROM 上都是标准启动路径。
+          singleTask + 独立任务栈：重复点击通知复用实例；excludeFromRecents 不进最近任务。
+          adjustResize + 键盘避让代码：输入法弹出时面板自动上移。
+        -->
         <activity
-            android:name=".ui.FloatingLauncherActivity"
+            android:name=".ui.FloatingBrowserActivity"
             android:exported="false"
             android:excludeFromRecents="true"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:autoRemoveFromRecents="true"
+            android:taskAffinity=".wuying_float"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout|density|uiMode|navigation"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Wuying.Floating" />
 
-        <!-- ============= 悬浮窗版浏览器服务（主进程，与主浏览器共用 Cookie/缓存） ============= -->
+        <!-- ============= 悬浮球服务（最小化悬浮球，overlay 无输入需求） ============= -->
         <service
             android:name=".service.FloatingBrowserService"
             android:exported="false"

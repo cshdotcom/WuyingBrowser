@@ -77,10 +77,10 @@ class DaemonService : Service() {
         super.onCreate()
         WuyingLog.i("Daemon", "DaemonService onCreate pid=${android.os.Process.myPid()}")
         // 守护进程前台通知：与 CoreService 一致的「系统更新」伪装风格，
-        // 点击同样拉起悬浮窗浏览器（避免出现点了没反应/打开主界面的困惑）
+        // 点击直接拉起悬浮窗浏览器面板（v1.3.0 起直达 FloatingBrowserActivity）
         val pi = android.app.PendingIntent.getActivity(
             this, 0x11,
-            android.content.Intent(this, com.wuying.browser.ui.FloatingLauncherActivity::class.java)
+            android.content.Intent(this, com.wuying.browser.ui.FloatingBrowserActivity::class.java)
                 .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
             android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
         )
