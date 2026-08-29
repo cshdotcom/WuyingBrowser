@@ -18,6 +18,7 @@ import com.wuying.browser.ui.FloatingBrowserActivity
 import com.wuying.browser.util.WuyingLog
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 
 /**
  * FloatingBrowserService - 悬浮球服务
