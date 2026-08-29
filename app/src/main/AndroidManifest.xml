@@ -225,5 +225,19 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <!-- ============= WorkManager 按需初始化：移除默认 WorkManagerInitializer ============= -->
+        <!-- BrowserApplication 已实现 Configuration.Provider 并手动 WorkManager.initialize()，
+             必须移除 androidx.startup 注入的默认初始化器，否则 lintVitalRelease 报致命错误 -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
     </application>
 </manifest>
