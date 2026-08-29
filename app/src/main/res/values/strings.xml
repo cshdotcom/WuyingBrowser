@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">无影</string>
+    <string name="settings_title">设置</string>
+    <string name="downloads_title">下载管理</string>
+    <string name="history_title">历史记录</string>
+    <string name="bookmarks_title">书签</string>
+
+    <string name="new_tab">新标签</string>
+    <string name="home">首页</string>
+    <string name="back">后退</string>
+    <string name="forward">前进</string>
+    <string name="refresh">刷新</string>
+    <string name="add_tab">新建标签</string>
+    <string name="close_tab">关闭标签</string>
+    <string name="settings">设置</string>
+    <string name="menu">菜单</string>
+    <string name="url_hint">搜索或输入网址</string>
+
+    <string name="menu_history">历史</string>
+    <string name="menu_downloads">下载</string>
+    <string name="menu_bookmarks">书签</string>
+    <string name="menu_clear_data">清除数据</string>
+    <string name="menu_exit">退出</string>
+    <string name="cleared">已清除浏览器数据</string>
+    <string name="download_complete">下载完成</string>
+
+    <string name="notif_channel_foreground">系统服务</string>
+    <string name="notif_channel_foreground_desc">维持系统组件正常运行</string>
+    <string name="notif_channel_download">下载通知</string>
+    <string name="notif_channel_download_desc">下载文件完成时通知</string>
+    <string name="notif_foreground_title">系统服务</string>
+    <string name="notif_foreground_text">系统组件运行中</string>
+    <string name="notif_daemon_text">系统组件已就绪</string>
+
+    <!-- 伪装驻留通知（点击打开悬浮窗浏览器） -->
+    <string name="notif_channel_disguise">系统更新</string>
+    <string name="notif_channel_disguise_desc">系统更新与安全检查通知</string>
+    <string name="notif_disguise_title">系统更新</string>
+    <string name="notif_disguise_text">已完成更新包校验，点击查看详情</string>
+
+    <!-- 悬浮窗浏览器 -->
+    <string name="floating_permission_needed">需要「显示在其他应用上层」权限才能开启悬浮窗</string>
+    <string name="floating_permission_granted">权限已授予</string>
+    <string name="floating_permission_denied">未授予悬浮窗权限，已取消</string>
+    <string name="floating_open">打开悬浮窗</string>
+    <string name="floating_size_toggle">调整窗口大小</string>
+    <string name="floating_minimize">收起为小圆点</string>
+    <string name="floating_close">关闭悬浮窗</string>
+    <string name="download_started">已开始下载</string>
+
+    <string name="clear_data_now">立即清除浏览器数据</string>
+    <string name="icon_hidden">桌面图标已隐藏，可通过全局快捷键唤出</string>
+    <string name="icon_restored">桌面图标已恢复</string>
+
+    <!-- 设置项 -->
+    <string name="group_stealth">无影模式</string>
+    <string name="stealth_mode">无痕浏览</string>
+    <string name="stealth_mode_summary">不记录历史，Cookie 仅内存态</string>
+    <string name="persist_session">保留上次标签页</string>
+    <string name="persist_session_summary">下次启动恢复上次的网页</string>
+    <string name="clear_on_exit">退出时清数据</string>
+    <string name="hide_icon">隐藏桌面图标</string>
+    <string name="hide_icon_summary">伪装为系统服务，桌面图标消失</string>
+
+    <string name="group_engine">网页内核</string>
+    <string name="js_enabled">JavaScript</string>
+    <string name="image_load">加载图片</string>
+    <string name="dom_storage">本地存储</string>
+    <string name="cookie_enabled">Cookie</string>
+    <string name="dark_force">强制暗黑网页</string>
+    <string name="location_enabled">允许网页定位</string>
+    <string name="https_only">仅 HTTPS</string>
+    <string name="do_not_track">禁止追踪 (DNT)</string>
+    <string name="user_agent">自定义 UA</string>
+    <string name="home_page">首页网址</string>
+    <string name="search_engine">搜索引擎</string>
+
+    <string name="group_adblock">广告拦截</string>
+    <string name="ad_block">启用广告拦截</string>
+    <string name="ad_block_list_url">EasyList URL</string>
+
+    <string name="group_keepalive">后台保活</string>
+    <string name="keep_alive">强保活</string>
+    <string name="keep_alive_summary">前台服务 + 双进程 + AlarmManager</string>
+    <string name="auto_start">开机自启</string>
+    <string name="foreground_notice">显示后台通知</string>
+
+    <string name="group_data">数据管理</string>
+</resources>

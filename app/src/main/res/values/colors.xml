@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主背景 -->
+    <color name="bg_primary">#FF0A0A0F</color>
+    <color name="bg_secondary">#FF13131A</color>
+    <color name="bg_card">#FF1A1A24</color>
+    <color name="bg_input">#FF0F0F18</color>
+
+    <!-- 文本 -->
+    <color name="text_primary">#FFEAEAEA</color>
+    <color name="text_secondary">#FF7E8094</color>
+    <color name="text_accent">#FF00FFA3</color>
+    <color name="text_warning">#FFFF5A5A</color>
+
+    <!-- 强调色 -->
+    <color name="accent_cyan">#FF00FFA3</color>
+    <color name="accent_purple">#FF8A5FFF</color>
+    <color name="accent_glow">#3300FFA3</color>
+
+    <!-- 边框 -->
+    <color name="border">#FF262630</color>
+
+    <!-- Tab 选中态 -->
+    <color name="tab_selected_bg">#FF00FFA3</color>
+    <color name="tab_selected_text">#FF0A0A0F</color>
+    <color name="tab_normal_bg">#FF1A1A24</color>
+    <color name="tab_normal_text">#FFEAEAEA</color>
+
+    <!-- 进度条 -->
+    <color name="progress">#FF00FFA3</color>
+
+    <!-- 通知图标 -->
+    <color name="notif_icon">#FF00FFA3</color>
+</resources>

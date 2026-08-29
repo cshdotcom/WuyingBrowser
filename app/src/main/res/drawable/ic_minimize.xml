@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 收起为小圆点：向下收缩箭头 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFEAEAEA"
+        android:pathData="M12,15.5 C11.74,15.5 11.49,15.4 11.29,15.21 L6.29,10.21 C5.9,9.82 5.9,9.18 6.29,8.79 C6.68,8.4 7.32,8.4 7.71,8.79 L12,13.09 L16.29,8.79 C16.68,8.4 17.32,8.4 17.71,8.79 C18.1,9.18 18.1,9.82 17.71,10.21 L12.71,15.21 C12.51,15.4 12.26,15.5 12,15.5 Z" />
+    <path
+        android:fillColor="#FFEAEAEA"
+        android:pathData="M6,18.5 L18,18.5 C18.55,18.5 19,18.05 19,17.5 C19,16.95 18.55,16.5 18,16.5 L6,16.5 C5.45,16.5 5,16.95 5,17.5 C5,18.05 5.45,18.5 6,18.5 Z" />
+</vector>

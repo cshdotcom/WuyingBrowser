@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- ===== 无影模式 ===== -->
+    <PreferenceCategory android:title="@string/group_stealth" app:iconSpaceReserved="false">
+        <SwitchPreferenceCompat
+            android:key="stealth_mode"
+            android:title="@string/stealth_mode"
+            android:summary="@string/stealth_mode_summary"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="persist_session"
+            android:title="@string/persist_session"
+            android:summary="@string/persist_session_summary"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="clear_on_exit"
+            android:title="@string/clear_on_exit"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="hide_icon"
+            android:title="@string/hide_icon"
+            android:summary="@string/hide_icon_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <!-- ===== 网页内核 ===== -->
+    <PreferenceCategory android:title="@string/group_engine" app:iconSpaceReserved="false">
+        <SwitchPreferenceCompat
+            android:key="js_enabled"
+            android:title="@string/js_enabled"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="image_load"
+            android:title="@string/image_load"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="dom_storage"
+            android:title="@string/dom_storage"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="cookie_enabled"
+            android:title="@string/cookie_enabled"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="dark_force"
+            android:title="@string/dark_force"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="location_enabled"
+            android:title="@string/location_enabled"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="https_only"
+            android:title="@string/https_only"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="dnt"
+            android:title="@string/do_not_track"
+            app:iconSpaceReserved="false" />
+        <EditTextPreference
+            android:key="home_page"
+            android:title="@string/home_page"
+            app:iconSpaceReserved="false" />
+        <EditTextPreference
+            android:key="search_engine"
+            android:title="@string/search_engine"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <!-- ===== 广告拦截 ===== -->
+    <PreferenceCategory android:title="@string/group_adblock" app:iconSpaceReserved="false">
+        <SwitchPreferenceCompat
+            android:key="ad_block"
+            android:title="@string/ad_block"
+            app:iconSpaceReserved="false" />
+        <EditTextPreference
+            android:key="ad_block_list_url"
+            android:title="@string/ad_block_list_url"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <!-- ===== 后台保活 ===== -->
+    <PreferenceCategory android:title="@string/group_keepalive" app:iconSpaceReserved="false">
+        <SwitchPreferenceCompat
+            android:key="keep_alive"
+            android:title="@string/keep_alive"
+            android:summary="@string/keep_alive_summary"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="auto_start"
+            android:title="@string/auto_start"
+            app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:key="foreground_notice"
+            android:title="@string/foreground_notice"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <!-- ===== 数据管理 ===== -->
+    <PreferenceCategory android:title="@string/group_data" app:iconSpaceReserved="false">
+        <Preference
+            android:key="clear_data_now"
+            android:title="@string/clear_data_now"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

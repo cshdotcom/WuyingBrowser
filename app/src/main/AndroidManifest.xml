@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ========================= 网络 ========================= -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- ========================= 后台保活 ========================= -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- 安卓 14 起前台服务类型需要单独声明 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- ========================= 悬浮窗浏览器 ========================= -->
+    <!-- 悬浮窗版浏览器：在所有应用之上显示可拖动 WebView 小窗 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- ========================= 网页权限代理 ========================= -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+    <application
+        android:name=".BrowserApplication"
+        android:allowBackup="true"
+        android:backupAgent=".util.WuyingBackupAgent"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:hardwareAccelerated="true"
+        android:largeHeap="true"
+        android:enableOnBackInvokedCallback="true"
+        android:requestLegacyExternalStorage="true"
+        android:theme="@style/Theme.Wuying"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:targetApi="34">
+
+        <!-- ============= 主入口 Activity：excludeFromRecents + 任务隔离 ============= -->
+        <!--
+          关键属性：
+          excludeFromRecents=true   —— 最近任务列表看不到
+          noHistory=false           —— 但状态需要被恢复，所以不是 noHistory
+          taskAffinity=.wuying_ui   —— 单独任务栈，方便和后台 Service 解耦
+          launchMode=singleTask     —— 单例，桌面图标再点恢复栈顶而不是新建
+          autoRemoveFromRecents=true —— 任务移除时自动清理（API 21+）
+        -->
+        <activity
+            android:name=".ui.BrowserActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:autoRemoveFromRecents="true"
+            android:taskAffinity=".wuying_ui"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout|density|uiMode|navigation"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Wuying">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- 允许作为默认浏览器接收链接 -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="intent" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+        <!-- ============= 设置页 ============= -->
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_title"
+            android:parentActivityName=".ui.BrowserActivity"
+            android:theme="@style/Theme.Wuying" />
+
+        <!-- ============= 下载管理页 ============= -->
+        <activity
+            android:name=".ui.DownloadsActivity"
+            android:exported="false"
+            android:label="@string/downloads_title"
+            android:parentActivityName=".ui.BrowserActivity"
+            android:theme="@style/Theme.Wuying" />
+
+        <!-- ============= 历史记录页 ============= -->
+        <activity
+            android:name=".ui.HistoryActivity"
+            android:exported="false"
+            android:label="@string/history_title"
+            android:parentActivityName=".ui.BrowserActivity"
+            android:theme="@style/Theme.Wuying" />
+
+        <!-- ============= 书签页 ============= -->
+        <activity
+            android:name=".ui.BookmarksActivity"
+            android:exported="false"
+            android:label="@string/bookmarks_title"
+            android:parentActivityName=".ui.BrowserActivity"
+            android:theme="@style/Theme.Wuying" />
+
+        <!-- ============= 通知点击跳板：拉起悬浮窗浏览器（无 UI 透明页） ============= -->
+        <activity
+            android:name=".ui.FloatingLauncherActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- ============= 悬浮窗版浏览器服务（主进程，与主浏览器共用 Cookie/缓存） ============= -->
+        <service
+            android:name=".service.FloatingBrowserService"
+            android:exported="false"
+            android:enabled="true"
+            android:stopWithTask="false" />
+
+        <!-- ============= 核心保活前台服务 ============= -->
+        <!--
+          foregroundServiceType=dataSync 让 Android 14+ 接受
+          exported=true 让 BootReceiver / DaemonService / AlarmManager 可以拉起
+        -->
+        <service
+            android:name=".service.CoreService"
+            android:exported="true"
+            android:enabled="true"
+            android:stopWithTask="false"
+            android:foregroundServiceType="dataSync"
+            android:process=":core" />
+
+        <!-- ============= 双进程守护：DaemonService 跑在另一个进程 ============= -->
+        <service
+            android:name=".service.DaemonService"
+            android:exported="true"
+            android:enabled="true"
+            android:stopWithTask="false"
+            android:foregroundServiceType="dataSync"
+            android:process=":daemon" />
+
+        <!-- ============= 开机自启 ============= -->
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <!-- ============= 系统广播监听：网络变化/解锁等保活时机 ============= -->
+        <receiver
+            android:name=".receiver.KeepAliveReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.TIME_TICK" />
+                <action android:name="com.wuying.browser.PING" />
+            </intent-filter>
+        </receiver>
+
+        <!-- ============= 通知下载完成 ============= -->
+        <receiver
+            android:name=".receiver.DownloadCompleteReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- ============= FileProvider 用于下载文件分享/安装 ============= -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+</manifest>

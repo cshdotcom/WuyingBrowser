@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 伪装通知小图标：系统更新风格（托盘 + 向下箭头），状态栏白色剪影 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- 向下箭头 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,2.5 C11.45,2.5 11,2.95 11,3.5 L11,11.09 L8.71,8.8 C8.32,8.41 7.68,8.41 7.29,8.8 C6.9,9.19 6.9,9.83 7.29,10.22 L11.29,14.22 C11.68,14.61 12.32,14.61 12.71,14.22 L16.71,10.22 C17.1,9.83 17.1,9.19 16.71,8.8 C16.32,8.41 15.68,8.41 15.29,8.8 L13,11.09 L13,3.5 C13,2.95 12.55,2.5 12,2.5 Z" />
+    <!-- 底部托盘 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M4.5,16 C3.95,16 3.5,16.45 3.5,17 L3.5,19.5 C3.5,20.6 4.4,21.5 5.5,21.5 L18.5,21.5 C19.6,21.5 20.5,20.6 20.5,19.5 L20.5,17 C20.5,16.45 20.05,16 19.5,16 C18.95,16 18.5,16.45 18.5,17 L18.5,19.5 L5.5,19.5 L5.5,17 C5.5,16.45 5.05,16 4.5,16 Z" />
+</vector>

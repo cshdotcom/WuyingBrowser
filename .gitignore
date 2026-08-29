@@ -1,0 +1,27 @@
+# 忽略 Gradle 构建产物
+.gradle/
+build/
+/local.properties
+.idea/
+.DS_Store
+captures/
+.cxx/
+*.iml
+
+# 忽略签名文件（私钥绝不入库，CI 通过 Actions Secrets 注入）
+*.keystore
+*.jks
+keystore/
+keystore.properties
+keystore.properties.bak
+
+# 环境变量 / 敏感配置
+.env
+local.properties
+
+# 忽略崩溃日志
+app/crash/
+
+# 忽略打包输出（除非手动放置）
+*.apk
+*.aab

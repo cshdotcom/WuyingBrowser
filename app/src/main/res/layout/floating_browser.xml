@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 悬浮窗浏览器面板：根视图为 FloatingRootView（拦截返回键），圆角深色面板 -->
+<com.wuying.browser.service.FloatingRootView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_floating_panel">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- 顶部区域（标题栏 + 工具栏）：圆角顶部，整体作为视觉头部 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_floating_head">
+
+            <!-- 标题栏 = 拖动手柄 -->
+            <LinearLayout
+                android:id="@+id/floating_drag_handle"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="6dp"
+                android:background="@drawable/bg_floating_head">
+
+                <TextView
+                    android:id="@+id/floating_page_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/floating_open"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:singleLine="true"
+                    android:ellipsize="end" />
+
+                <ImageButton
+                    android:id="@+id/btn_f_size"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/bg_btn"
+                    android:src="@drawable/ic_size"
+                    android:contentDescription="@string/floating_size_toggle" />
+
+                <ImageButton
+                    android:id="@+id/btn_f_min"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_btn"
+                    android:src="@drawable/ic_minimize"
+                    android:contentDescription="@string/floating_minimize" />
+
+                <ImageButton
+                    android:id="@+id/btn_f_close"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_btn"
+                    android:src="@drawable/ic_close"
+                    android:contentDescription="@string/floating_close" />
+            </LinearLayout>
+
+            <!-- 加载进度条 -->
+            <ProgressBar
+                android:id="@+id/floating_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:max="100"
+                android:progressTint="@color/progress"
+                android:progressBackgroundTint="@color/border"
+                android:visibility="gone" />
+
+            <!-- 工具栏：后退 / 前进 / 刷新 / 地址栏 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/bg_floating_head">
+
+                <ImageButton
+                    android:id="@+id/btn_f_back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/bg_btn"
+                    android:src="@drawable/ic_back"
+                    android:contentDescription="@string/back" />
+
+                <ImageButton
+                    android:id="@+id/btn_f_forward"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_btn"
+                    android:src="@drawable/ic_forward"
+                    android:contentDescription="@string/forward" />
+
+                <ImageButton
+                    android:id="@+id/btn_f_refresh"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_btn"
+                    android:src="@drawable/ic_refresh"
+                    android:contentDescription="@string/refresh" />
+
+                <EditText
+                    android:id="@+id/floating_url_input"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_url_input"
+                    android:hint="@string/url_hint"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:inputType="textUri"
+                    android:imeOptions="actionGo"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 网页内容区：FloatingBrowserService 会把 WebView 动态加进来 -->
+        <LinearLayout
+            android:id="@+id/floating_web_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="3dp" />
+    </LinearLayout>
+</com.wuying.browser.service.FloatingRootView>
