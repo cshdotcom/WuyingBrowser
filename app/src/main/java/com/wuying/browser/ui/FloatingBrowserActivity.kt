@@ -70,6 +70,9 @@ class FloatingBrowserActivity : AppCompatActivity() {
         /** 小窗尺寸 */
         private const val SMALL_W = 0.60f
         private const val SMALL_H = 0.42f
+        /** 自由缩放下限（dp，v1.3.1 右下角缩放把手） */
+        private const val MIN_W_DP = 220f
+        private const val MIN_H_DP = 170f
 
         fun start(context: Context, url: String? = null) {
             val i = Intent(context, FloatingBrowserActivity::class.java).apply {
@@ -211,6 +214,9 @@ class FloatingBrowserActivity : AppCompatActivity() {
         // 标题栏拖动
         p.findViewById<View>(R.id.floating_drag_handle).setOnTouchListener(dragListener())
 
+        // 右下角缩放把手：按住拖拽任意调整面板大小（v1.3.1）
+        p.findViewById<View>(R.id.floating_resize_grip).setOnTouchListener(resizeListener())
+
         // 面板定位：大窗，初始位置在屏幕上部偏左
         panelLp = FrameLayout.LayoutParams(
             (screenWidth * BIG_W).toInt(),
@@ -235,7 +241,9 @@ class FloatingBrowserActivity : AppCompatActivity() {
                     event.rawX, event.rawY,
                     lp.leftMargin.toFloat(), lp.topMargin.toFloat(), 0f
                 )
-                false
+                // DOWN 必须返回 true 占住触摸流，否则后续 MOVE 永远收不到（v1.3.0 拖动失效的根因）
+                v.parent?.requestDisallowInterceptTouchEvent(true)
+                true
             }
             MotionEvent.ACTION_MOVE -> {
                 val st = v.tag as? FloatArray ?: return@OnTouchListener false
@@ -245,11 +253,56 @@ class FloatingBrowserActivity : AppCompatActivity() {
                 lp.leftMargin = (st[2] + dx).toInt()
                 lp.topMargin = (st[3] + dy).toInt()
                 clampPanel(lp)
-                baseTopMargin = lp.topMargin
+                if (!imeAvoiding) baseTopMargin = lp.topMargin
                 panel?.requestLayout()
                 true
             }
-            MotionEvent.ACTION_UP -> true
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                v.parent?.requestDisallowInterceptTouchEvent(false)
+                true
+            }
+            else -> false
+        }
+    }
+
+    /**
+     * 右下角缩放把手（v1.3.1）：以面板左上角为锚点，手指位置即新的右下角。
+     * 与拖动同理：DOWN 必须返回 true 占住触摸流，后续 MOVE 才会送达。
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private fun resizeListener() = View.OnTouchListener { v, event ->
+        val lp = panelLp ?: return@OnTouchListener false
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                val loc = IntArray(2)
+                panel?.getLocationOnScreen(loc)
+                // 缩放过程只改宽高，左上角不动 —— DOWN 时记下面板位置即可作全程锚点
+                v.tag = floatArrayOf(loc[0].toFloat(), loc[1].toFloat())
+                v.parent?.requestDisallowInterceptTouchEvent(true)
+                true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                val st = v.tag as? FloatArray ?: return@OnTouchListener false
+                val minW = (MIN_W_DP * density).toInt()
+                val minH = (MIN_H_DP * density).toInt()
+                val maxW = screenWidth - (8 * density).toInt()
+                val maxH = screenHeight - (72 * density).toInt()
+                lp.width = (event.rawX - st[0]).toInt().coerceIn(minW, maxW)
+                lp.height = (event.rawY - st[1]).toInt().coerceIn(minH, maxH)
+                clampPanel(lp)
+                panel?.requestLayout()
+                true
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                v.parent?.requestDisallowInterceptTouchEvent(false)
+                if (!imeAvoiding) {
+                    baseTopMargin = lp.topMargin
+                    baseHeight = lp.height
+                }
+                // 让两档切换按钮与实际大小保持一致语义
+                isBigSize = lp.width >= screenWidth * ((BIG_W + SMALL_W) / 2)
+                true
+            }
             else -> false
         }
     }

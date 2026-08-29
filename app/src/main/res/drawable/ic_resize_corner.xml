@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 悬浮面板右下角缩放把手：三角 + 两条斜线，暗示可拖拽缩放 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#40FFFFFF"
+        android:pathData="M24,3 L24,24 L3,24 Z" />
+    <path
+        android:strokeColor="#80FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M24,13 L13,24" />
+    <path
+        android:strokeColor="#80FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M24,19 L19,24" />
+</vector>

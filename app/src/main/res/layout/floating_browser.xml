@@ -153,4 +153,15 @@
             android:orientation="vertical"
             android:padding="3dp" />
     </LinearLayout>
+
+    <!-- 右下角缩放把手：按住拖拽可任意调整面板大小（v1.3.1 起） -->
+    <ImageView
+        android:id="@+id/floating_resize_grip"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_gravity="bottom|end"
+        android:padding="6dp"
+        android:src="@drawable/ic_resize_corner"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/floating_resize" />
 </com.wuying.browser.ui.FloatingRootView>
