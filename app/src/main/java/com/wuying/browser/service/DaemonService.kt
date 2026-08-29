@@ -76,13 +76,21 @@ class DaemonService : Service() {
     override fun onCreate() {
         super.onCreate()
         WuyingLog.i("Daemon", "DaemonService onCreate pid=${android.os.Process.myPid()}")
-        // 守护进程也用前台服务（最小化通知），但用单独的 id
-        val notif = android.app.Notification.Builder(this, CoreService.CHANNEL_ID_FOREGROUND)
+        // 守护进程前台通知：与 CoreService 一致的「系统更新」伪装风格，
+        // 点击同样拉起悬浮窗浏览器（避免出现点了没反应/打开主界面的困惑）
+        val pi = android.app.PendingIntent.getActivity(
+            this, 0x11,
+            android.content.Intent(this, com.wuying.browser.ui.FloatingLauncherActivity::class.java)
+                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+        )
+        val notif = android.app.Notification.Builder(this, CoreService.CHANNEL_ID_DISGUISE)
             .setSmallIcon(R.drawable.ic_sys_update_notif)
-            .setContentTitle(getString(R.string.notif_foreground_title))
-            .setContentText(getString(R.string.notif_daemon_text))
+            .setContentTitle(getString(R.string.notif_disguise_title))
+            .setContentText(getString(R.string.notif_disguise_text))
+            .setContentIntent(pi)
             .setOngoing(true)
-            .setPriority(android.app.Notification.PRIORITY_MIN)
+            .setPriority(android.app.Notification.PRIORITY_LOW)
             .build()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             startForeground(0x77_78, notif, android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)

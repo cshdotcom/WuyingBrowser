@@ -47,6 +47,7 @@
     <string name="floating_size_toggle">调整窗口大小</string>
     <string name="floating_minimize">收起为小圆点</string>
     <string name="floating_close">关闭悬浮窗</string>
+    <string name="floating_toggle_ime">切换输入法</string>
     <string name="download_started">已开始下载</string>
 
     <string name="clear_data_now">立即清除浏览器数据</string>

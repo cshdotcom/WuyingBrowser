@@ -73,8 +73,6 @@ class CoreService : Service() {
         WuyingLog.i("Core", "CoreService onCreate pid=${android.os.Process.myPid()}")
         createNotificationChannels()
         startForegroundCompat()
-        // 伪装驻留通知：常驻通知栏，点击直接拉起悬浮窗浏览器
-        postDisguiseNotification()
         isRunning = true
 
         // 心跳：每 5 分钟自检一次，被杀也能被 AlarmManager 拉起
@@ -187,43 +185,16 @@ class CoreService : Service() {
     }
 
     /**
-     * 启动前台服务，使用最小化通知
+     * 启动前台服务 —— 前台通知本身就是那条「伪装驻留通知」（三合一）
+     *
+     * - ongoing=true 随前台服务驻留通知栏，系统不会回收（驻留）
+     * - 渠道/标题/文案/图标均为「系统更新」风格（伪装）
+     * - 点击 -> FloatingLauncherActivity -> 拉起悬浮窗版浏览器（点击行为）
+     *
+     * 不再额外发第二条伪装通知：两条样式几乎一样的通知会让用户点错
+     * （旧版就是因此点到了打开主界面的那条）。
      */
     private fun startForegroundCompat() {
-        val openIntent = Intent(this, BrowserActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-        val pi = PendingIntent.getActivity(
-            this, 0, openIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        val notif = Notification.Builder(this, CHANNEL_ID_FOREGROUND)
-            .setContentTitle(getString(R.string.notif_foreground_title))
-            .setContentText(getString(R.string.notif_foreground_text))
-            .setSmallIcon(R.drawable.ic_sys_update_notif)
-            .setContentIntent(pi)
-            .setOngoing(true)
-            .setPriority(Notification.PRIORITY_MIN)
-            .setVisibility(Notification.VISIBILITY_SECRET)
-            .build()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(NOTIFICATION_ID, notif, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-        } else {
-            startForeground(NOTIFICATION_ID, notif)
-        }
-    }
-
-    /**
-     * 伪装驻留通知 —— 常驻通知栏的「系统更新」风格通知
-     *
-     * 特点：
-     * - ongoing=true 驻留通知栏，不响铃不震动
-     * - VISIBILITY_PUBLIC 锁屏也显示（更像系统通知）
-     * - 点击跳转 FloatingLauncherActivity -> 拉起悬浮窗版浏览器
-     * - 通道名/文案/图标均为系统风格，无浏览器痕迹
-     */
-    private fun postDisguiseNotification() {
         val pi = PendingIntent.getActivity(
             this, 0x10,
             Intent(this, FloatingLauncherActivity::class.java)
@@ -240,12 +211,11 @@ class CoreService : Service() {
             .setPriority(Notification.PRIORITY_LOW)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .build()
-        try {
-            getSystemService(NOTIFICATION_SERVICE).let {
-                (it as NotificationManager).notify(NOTIFICATION_ID_DISGUISE, notif)
-            }
-        } catch (t: Throwable) {
-            WuyingLog.e("Core", "发送伪装驻留通知失败", t)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(NOTIFICATION_ID, notif, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        } else {
+            startForeground(NOTIFICATION_ID, notif)
         }
     }
 

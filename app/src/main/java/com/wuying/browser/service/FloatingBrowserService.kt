@@ -157,11 +157,17 @@ class FloatingBrowserService : android.app.Service() {
         val url = intent?.getStringExtra(EXTRA_URL)
         when (intent?.action) {
             ACTION_SHOW -> {
-                if (!isPanelShown) {
+                val root = rootView
+                if (root != null && root.parent != null && isPanelShown) {
+                    // 面板已显示：重新置顶（WindowManager 没有 raise API，移除后重加）
+                    try {
+                        windowManager?.removeView(root)
+                        windowManager?.addView(root, panelParams)
+                    } catch (_: Throwable) {}
+                } else {
                     showPanel()
-                } else if (url != null) {
-                    loadInWebView(url)
                 }
+                if (url != null) loadInWebView(url)
             }
         }
         return START_NOT_STICKY
@@ -189,6 +195,20 @@ class FloatingBrowserService : android.app.Service() {
                 urlInput?.takeIf { !it.hasFocus() }?.setText(url)
             }
             onTitleChanged = { t -> pageTitle?.text = t }
+            // 悬浮窗场景兑底：部分 ROM 上系统不会为 overlay 窗口自动弹出键盘，
+            // 点击网页后延迟主动请求一次输入法（未聚焦输入框时此调用无副作用）
+            setOnTouchListener { v, e ->
+                if (e.actionMasked == MotionEvent.ACTION_DOWN) {
+                    v.requestFocus()
+                    postDelayed({
+                        try {
+                            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+                        } catch (_: Throwable) {}
+                    }, 200)
+                }
+                false // 不消费事件，WebView 正常处理点击/滑动
+            }
             setDownloadListener { u, cd, mime, _, _ ->
                 scope.launch {
                     try {
@@ -227,6 +247,7 @@ class FloatingBrowserService : android.app.Service() {
         root.findViewById<ImageButton>(R.id.btn_f_back).setOnClickListener { webView?.goBack() }
         root.findViewById<ImageButton>(R.id.btn_f_forward).setOnClickListener { webView?.goForward() }
         root.findViewById<ImageButton>(R.id.btn_f_refresh).setOnClickListener { webView?.reload() }
+        root.findViewById<ImageButton>(R.id.btn_f_ime).setOnClickListener { toggleIme() }
         root.findViewById<ImageButton>(R.id.btn_f_size).setOnClickListener { toggleSize() }
         root.findViewById<ImageButton>(R.id.btn_f_min).setOnClickListener { showBubble() }
         root.findViewById<ImageButton>(R.id.btn_f_close).setOnClickListener { stopSelf() }
@@ -254,13 +275,23 @@ class FloatingBrowserService : android.app.Service() {
         return WindowManager.LayoutParams(
             w, h,
             overlayType(),
+            // ⚠ FLAG_ALT_FOCUSABLE_IM 是悬浮窗能唤起输入法的关键：
+            // TYPE_APPLICATION_OVERLAY 等非应用窗口默认被系统视为"不与输入法交互"
+            // （窗口悬浮于输入法之上，点击输入框不会弹键盘）。加上该标志后窗口恢复
+            // 与应用窗口一致的输入法交互行为，网页内输入框 / 地址栏均可唤起键盘。
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                    or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                    or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                    or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
             x = (screenWidth * 0.04f).toInt()
             y = (screenHeight * 0.18f).toInt()
+            // 输入法弹出时窗口自动避让（API 30+），避免键盘遮住底部导航栏
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                setFitInsetsTypes(android.view.WindowInsets.Type.ime())
+            }
+            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         }
     }
 
@@ -295,6 +326,23 @@ class FloatingBrowserService : android.app.Service() {
         params.height = (screenHeight * hRatio).toInt()
         clamp(params, params.width, params.height)
         try { wm.updateViewLayout(root, params) } catch (_: Throwable) {}
+    }
+
+    /**
+     * 手动唤起/收起输入法（工具栏 ⌨ 按钮）
+     *
+     * 部分魔改 ROM 上即使窗口语义正确，系统也不会为 overlay 窗口自动弹键盘，
+     * 该按钮直接调用 InputMethodManager 强制切换，作为最终兜底。
+     */
+    private fun toggleIme() {
+        // Service 没有 Activity.currentFocus；用视图层级里当前持有焦点的子视图
+        val target = rootView?.findFocus() ?: webView ?: urlInput ?: return
+        try {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.toggleSoftInputFromWindow(target.applicationWindowToken, 0, 0)
+        } catch (t: Throwable) {
+            WuyingLog.e("Floating", "切换输入法失败", t)
+        }
     }
 
     // ============================== 气泡 ==============================

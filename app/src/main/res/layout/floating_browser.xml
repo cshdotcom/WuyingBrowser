@@ -114,6 +114,16 @@
                     android:src="@drawable/ic_refresh"
                     android:contentDescription="@string/refresh" />
 
+                <!-- 输入法切换（悬浮窗在部分 ROM 上无法自动弹键盘时的兜底） -->
+                <ImageButton
+                    android:id="@+id/btn_f_ime"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_btn"
+                    android:src="@drawable/ic_keyboard"
+                    android:contentDescription="@string/floating_toggle_ime" />
+
                 <EditText
                     android:id="@+id/floating_url_input"
                     android:layout_width="0dp"
